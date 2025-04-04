@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Blockchain Contábil</title>
+</head>
+<body>
+    <h2>Registro de Documentos Contábeis</h2>
+
+    <form id="docForm">
+        <label for="titulo">Título:</label><br>
+        <input type="text" id="titulo" name="titulo" required><br><br>
+        <label for="descricao">Descrição:</label><br>
+        <textarea id="descricao" name="descricao" required></textarea><br><br>
+        <button type="submit">Adicionar Documento</button>
+    </form>
+
+    <br>
+    <button onclick="minerarBloco()">Minerar Bloco</button>
+    <br><br>
+
+    <h3>Blockchain:</h3>
+    <pre id="blockchainDisplay">Carregando...</pre>
+
+    <script>
+        const api = '';
+
+        document.getElementById('docForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const titulo = document.getElementById('titulo').value;
+            const descricao = document.getElementById('descricao').value;
+            const response = await fetch(`${api}/adicionar_documento`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ titulo, descricao })
+            });
+            const result = await response.json();
+            alert(result.mensagem);
+            atualizarBlockchain();
+        });
+
+        async function minerarBloco() {
+            const res = await fetch(`${api}/minerar_bloco`);
+            const data = await res.json();
+            alert("Bloco minerado!");
+            atualizarBlockchain();
+        }
+
+        async function atualizarBlockchain() {
+            const res = await fetch(`${api}/blockchain`);
+            const data = await res.json();
+            document.getElementById('blockchainDisplay').textContent = JSON.stringify(data.chain, null, 4);
+        }
+
+        atualizarBlockchain();
+    </script>
+</body>
+</html>

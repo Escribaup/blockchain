@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  blockchain:
+    build: .
+    container_name: blockchain_app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blockchain.rule=Host(`blockchain.idvl.com.br`)"
+      - "traefik.http.routers.blockchain.entrypoints=web"
+      - "traefik.http.services.blockchain.loadbalancer.server.port=5000"
+    restart: always
